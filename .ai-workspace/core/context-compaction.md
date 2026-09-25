@@ -1,0 +1,48 @@
+# 小任务完成后的上下文压缩规则
+
+目标：每完成一个边界明确的小任务，就把可恢复状态压缩到工作区文件，减少后续重复读取对话、长日志和工具输出产生的 Token。
+
+## 触发时机
+
+- 一个小任务已经得到明确结果：`completed`、`blocked`、`needs_confirmation` 或 `manual_validation`。
+- 当前没有仍在运行的命令、MCP 委派、subagent 或待处理权限请求。
+- 不在每次工具调用后压缩；只在一个可独立描述的小任务结束时执行一次。
+
+## 必须执行的收尾动作
+
+1. 覆盖更新 `.ai-workspace/tasks/context-checkpoint.md`，不得持续追加历史全文。
+2. `context-checkpoint.md` 只有单一 owner 和唯一合并入口；并发 Agent 只返回待合并片段，不直接写入。更新前检查版本，更新后检查目标内容块及非目标内容；完成或转交时释放锁。具体写锁字段与收口规则见 `../agents/team-orchestration.md`。
+3. 检查点最多 40 行、约 1200 个中文字符，只保留：当前模式、刚完成事项、有效事实源、未完成事项、下一步、禁止事项和验证状态。
+4. 任务状态发生实质变化时同步更新：
+   - 未完成或待人工处理：`.ai-workspace/tasks/current.md`；**只保留活动任务**，仅对对应的 `## TASK-*` 块执行精确 Edit，禁止原地重排活动块；更新前做版本检查，更新后核对目标块与非目标内容。
+   - 已结束：执行下方**退休流程**，不再把整块留在 `current.md`。
+   - 已完成索引：`.ai-workspace/tasks/completed.md`，只记录关键结论和证据，不复制完整对话/日志。
+5. 后续恢复时先读 `context-checkpoint.md`，再按需读 `current.md` 和相关事实源；不得默认重读完整聊天、全部 facts 或全部日志。
+6. 最终回复保持简短，引用工作区记录路径，不重复粘贴已经落盘的完整背景。
+7. 关闭不再需要的 subagent；长命令输出只保留结论、关键错误和必要时间点。
+
+## 任务退休流程（current.md 的唯一出口）
+
+`current.md` 是「只装活动任务」的文件，硬上限 **30,000 字节**（由 `tools/ws-lint.cjs` 强制）；只有入口没有出口，它必然单调膨胀到无法阅读。因此每个任务结束时必须执行：
+
+1. 把该任务**整块正文**（从 `## TASK-*` 到下一个 `## ` 之前）**追加**到 `.ai-workspace/tasks/archive/tasks-YYYY-MM.md`，正文一字不改。
+2. 从 `current.md` 删除该块（一次精确 Edit，**只动这一块**）。
+3. 在 `current.md` 的 `## 已归档索引` 段追加一行：`- <日期> · <任务名> → tasks/archive/tasks-YYYY-MM.md`。
+4. 需要长期保留的结论写入 `known-issues/`；接口或架构结论写入 `decisions/`。不要留在任务块里。
+5. 运行 `node .ai-workspace/tools/ws-lint.cjs` 确认预算未超。
+
+退休 = 「追加归档 + 精确删除一块 + 追加一行索引」。原「禁止整文件替换或重排」的防污染意图完整保留（永不整文件重写、永不原地重排活动块），同时终于给 `current.md` 提供了出口。
+
+## 平台压缩能力
+
+- 如果当前运行时提供明确的上下文压缩/compaction 工具，在完成上述落盘后调用一次。
+- 如果没有该工具，则以覆盖式 `context-checkpoint.md` 作为逻辑压缩，不得声称已触发底层 compaction。
+- 不得为了压缩而中断正在执行的工具、丢失未记录的用户授权或删除事实源。
+
+## Token 控制
+
+- 同一事实只保留一个事实源，其它文件使用路径引用。
+- 搜索和日志输出优先统计、命中行和短摘要，避免整文件回显。
+- 普通小任务不生成长计划、长复盘或重复验收报告。
+- 检查点只保存恢复任务必需的信息；历史证据放入 `archive/`、`completed.md`、known-issues 或 decisions。
+- 阅读顺序固定为：`context-checkpoint.md` → `current.md` → `INDEX.md` 过滤 → 命中的具体文档。不要默认通读 `known-issues/` 或 `procedures/` 全目录。

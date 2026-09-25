@@ -1,0 +1,19 @@
+# 凭据目录：本地保留，永不入库（与 .ai-workspace/tools/ws-lint.cjs 的检查项对应）
+.ai-workspace/secrets/
+secrets/
+CREDENTIALS.md
+CREDENTIALS.txt
+*.key.txt
+
+# 系统与编辑器产物
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# 临时与日志
+tmp/
+*.tmp
+*.log
