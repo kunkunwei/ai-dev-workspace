@@ -1,0 +1,57 @@
+# =====================================================================
+# applications.example.yaml —— 投递台账【空骨架 + 一条虚构示例】
+# =====================================================================
+# 用法：
+#   1. 复制本文件为 <求职目录>/data/applications.yaml
+#   2. 按下面「一条虚构示例」的格式录入你的投递
+#
+# 字段说明：
+#   - match：由 W1 评估得出（高/中/低），不要凭感觉填
+#   - stage 只是录入时快照；状态事实源是投递看板（面板 + 私有仓 data.json）
+#   - jd_file / tailor_file / resume 是补充索引（面板数据模型里没有的字段）
+#   - events 追加式记录：date + stage + note，不删历史
+#   - 公司名等用虚构示例（示例科技 / 某某公司），真实数据自己替换
+# =====================================================================
+
+version: 1
+updated: <YYYY-MM-DD>
+
+stages: [待投递, 已投, 笔试, 一面, 二面, 三面, HR面, Offer, 已挂, 放弃]
+
+applications:
+
+  # ── 一条虚构示例（格式示范）─────────────────────────────────
+  - id: <YYYY-MM>-<公司>-<岗位>        # 例：2026-09-shili-jichu
+    company: <公司名>                   # 例：示例科技
+    position: <岗位名>                  # 例：嵌入式系统软件工程师（基础系统）
+    channel: 官网                       # 官网 / 校招 / 内推
+    city: <城市>                        # 例：杭州
+    match: 高                           # 高 / 中 / 低（由 W1 评估得出）
+    stage: 待投递                       # 快照，非事实源
+    applied_on: <YYYY-MM-DD>           # 未投则留空或 UNKNOWN
+    next_action: <下一步>               # 例：去官网投递（简历 + 在线简历都已就绪）
+    next_due: <YYYY-MM-DD>             # 例：2026-11-03（笔试/面试时间）
+    resume: resume/<岗位>.md
+    jd_file: jd/<YYYY-MM>-<公司>-<岗位>.md
+    tailor_file: tailor/<YYYY-MM>-<公司>-<岗位>.md
+    notes: <补充说明，可留空>
+    events:
+      - {date: <YYYY-MM-DD>, stage: 待投递, note: 简历定制完成}
+      - {date: <YYYY-MM-DD>, stage: 待投递, note: 完成 W1 岗位评估，结论：匹配度高，建议投递}
+
+  # ── 第二条例子：已投递 ──────────────────────────────────────
+  - id: <YYYY-MM>-<公司>-<岗位2>
+    company: <公司名>
+    position: <岗位名>
+    channel: 官网
+    city: <城市>
+    match: 中
+    stage: 已投
+    applied_on: <YYYY-MM-DD>
+    next_action: 等筛选结果
+    resume: resume/<岗位2>.md
+    notes: <补充说明>
+    events:
+      - {date: <YYYY-MM-DD>, stage: 已投, note: 官网投递完成}
+
+  # ── 后续追加：复制上面的块，按格式加即可 ──────────────────────

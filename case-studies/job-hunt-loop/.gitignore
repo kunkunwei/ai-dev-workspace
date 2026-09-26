@@ -1,0 +1,22 @@
+# 个人数据：只留 example 骨架，真实数据永不入库
+data/
+jd/
+tailor/
+out/
+
+# 排除非 example 的 yaml：只允许 examples/*.example.yaml 进库
+data/*.yaml
+*.yaml
+!examples/*.example.yaml
+
+# 工具生成物
+tools/out/
+*.json
+
+# 凭据与临时文件
+*.key.txt
+*.token
+tmp/
+*.log
+.DS_Store
+Thumbs.db

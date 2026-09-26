@@ -1,0 +1,127 @@
+# =====================================================================
+# profile.example.yaml —— 结构化简历【空骨架】
+# =====================================================================
+# 用法：
+#   1. 复制本文件为 <求职目录>/data/profile.yaml（并加入 .gitignore，绝不提交公开仓库）
+#   2. 把 <占位符> 替换成你自己的值
+#
+# 字段说明：
+#   - risk 定义：low = 工作台有源文件/日志/脚本支撑；mid = 只有学校项目支撑；
+#                high = 没有支撑，不能写进简历（见 boundaries）
+#   - evidence 是「证据锚点」，格式 <相对路径>:<行号>，必须真实存在可复核
+#   - 值全部用 <占位符> 或虚构示例（示例科技 / 某某公司 / user@example.com / 13800000000），
+#     没有的字段写 UNKNOWN，禁止编造
+# =====================================================================
+
+version: 1
+updated: <YYYY-MM-DD>
+
+# ---------------- basic ----------------
+basic:
+  name: <姓名>                          # 例：张三
+  phone: <手机号>                        # 例：13800000000
+  email: <邮箱>                          # 例：user@example.com
+  birthday: <YYYY.M>                    # 精确到月即可
+  political: <政治面貌>                  # 例：共青团员
+  hometown: UNKNOWN                     # 源文件未出现则写 UNKNOWN
+  degree: <学历>                         # 例：本科
+  school: <学校>                         # 例：某某大学
+  major: <专业>                          # 例：机器人工程（自动化类）
+  period: <YYYY.MM~YYYY.MM>             # 例：2023.09~2027.06
+  graduate_year: <YYYY>                 # 例：2027
+  photo: resume/photo.png               # 相对路径
+  courses:
+    - <主修课程 1>
+    - <主修课程 2>
+
+# ---------------- job_intent ----------------
+job_intent:
+  target_roles: [<目标岗位 1>, <目标岗位 2>]   # 例：[嵌入式系统软件工程师, 驱动/BSP]
+  cities: [<意向城市 1>, <意向城市 2>]         # 例：[深圳, 上海, 杭州]
+  available_from: <YYYY.MM>                # 例：2027.07（与 graduate_year 呼应）
+
+# ---------------- skills ----------------
+# 核心能力：一条一句话，带证据锚点和风险等级
+skills:
+  - title: <技能名>
+    text: <一句话能力描述，可含 **强调** 与 `代码` 标记>
+    risk: <low|mid|high>
+    evidence: <相对路径>:<行号>        # 例：docs/provision.bash:252-264；无则 UNKNOWN
+  - title: <另一条技能>
+    text: <描述>
+    risk: <low|mid|high>
+    evidence: UNKNOWN
+
+# ---------------- education ----------------
+education:
+  - school: <学校>
+    major: <专业>
+    degree: <学历>
+    period: <YYYY.MM~至今>
+    courses: <见 basic.courses>
+
+# ---------------- internships ----------------
+# bullets 逐条摘自源文件；source 标注出处行号；量化点必须能指到证据索引
+internships:
+  - company: <实习公司>                   # 例：示例科技
+    role: <岗位>                          # 例：嵌入式软件工程师
+    period: <YYYY.MM~至今>
+    bullets:
+      - text: <一条工作内容 / 量化成果>
+        source: <相对路径>:<行号>
+      - text: <另一条>
+        source: <相对路径>:<行号>
+
+# ---------------- projects ----------------
+projects:
+  - name: <项目名>
+    period: <YYYY.MM~YYYY.MM>
+    role: <角色>                          # 例：队长 / 电控组组长 / 项目负责人
+    description: <项目一句话描述>
+    bullets:
+      - <职责与量化成果 1>
+      - <职责与量化成果 2>
+    source: <相对路径>
+
+# ---------------- competitions ----------------
+competitions:
+  - name: <赛事与奖项名>
+    year: <YYYY>
+    period: <YYYY.MM~YYYY.MM>
+    role: <角色>
+    desc: <赛事背景 + 本人贡献>
+    source: <相对路径>
+
+# ---------------- work_description ----------------
+# 在线简历「实习经历」字段的散文体版本，按长度三选一
+work_description:
+  source: <在线简历-工作描述.md>            # 长段落用 source 指向外部文件，不复制进来
+  long: <~1200 字主版本>
+  mid: <~340 字精简版>
+  one_line: <~90 字一句话版>
+
+# ---------------- boundaries ----------------
+# ★ 红线：AI 做评估和改简历时必须自检的「不能写」。逐条摘自 证据索引.md 边界表。
+# 每条 = 一个「不能讲的能力」，最好带上搜索关键词与命中结果，例如：
+boundaries:
+  - <某方向只有使用经验、没有调试经验>     # 例：某总线协议只有使用经验，无调试经验
+  - <没从零写过某类驱动，只是构建/部署/校验> # 例：外设驱动只做过补编译/部署/校验，不是「开发」
+  - <没做过某类调试>                       # 例：没用过某调试器（简历写的是另一条链路，来自学校项目）
+  - <某工具链无使用记录>                   # 例：没用过某性能分析工具——实际用日志时间线 / 网络观测命令
+
+# ---------------- drifting_numbers ----------------
+# 会漂移的数字：会随时间变的数字（篇数、行数）不进简历；写死的数字必须能指到源文件。
+drifting_numbers:
+  - claim: <简历里想写的数字>
+    actual: <实测值>
+    advice: <建议：改成模糊表述「30+ 篇」或直接删掉>
+
+# ---------------- interview_pitfalls ----------------
+# 三个必须提前想清楚的追问（摘自 证据索引.md 追问表）
+interview_pitfalls:
+  - question: <最可能被追问的问题 1>
+    answer: <照实答的措辞>
+    source: <证据索引.md>
+  - question: <最可能被追问的问题 2>
+    answer: <照实答的措辞>
+    source: <证据索引.md>
