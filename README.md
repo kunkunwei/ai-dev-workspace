@@ -2,15 +2,6 @@
 
 > 把「AI 辅助研发」从「会用工具」做成**有规范、有工具、有量化收益**的工程实践。
 
-## Case Study：求职投递闭环
-
-> 用「文件化事实源 + AI 执行」把求职投递做成一条**可追溯、可复核、不靠记忆**的闭环：
-> JD 评估 → 简历定制 → 表单填写 → 台账看板。含防幻觉评估机制（证据索引 + 红线）、
-> 4 条真实工程踩坑、通用化转换脚本。
-> → [进入 case study](case-studies/job-hunt-loop/README.md)
-
----
-
 一套面向 AI 辅助研发（AI Coding / AI Agent 协作）的**文件化工作区规范 + 强制校验工具链**。
 
 不是又一个 prompt 合集，而是把 AI 协作里反复出问题的地方固化成可执行的规则与检查：
@@ -243,6 +234,21 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
    node .ai-workspace/tools/ws-lint.cjs         # 强制校验
    ```
 4. 从 `ws-lint.cjs` 里删掉你不需要的检查项，**保留索引新鲜度与凭据卫生这两条**
+
+---
+
+## 内容导航 / 分支说明
+
+> **Case Study：求职投递闭环** —— 本仓库方法论在一个具体场景的完整落地：
+> 用「文件化事实源 + AI 执行」把求职投递做成一条**可追溯、可复核、不靠记忆**的闭环
+> （JD 评估 → 简历定制 → 表单填写 → 台账看板），含防幻觉评估机制（证据索引 + 红线）、
+> 4 条真实工程踩坑、通用化转换脚本。
+> → [进入 case study](case-studies/job-hunt-loop/README.md)
+
+| 分支 | 内容 | 怎么看 |
+|---|---|---|
+| `main`（默认） | 工作区规范与强制校验工具链 —— 本文件介绍的主体 | 就是当前分支 |
+| `feat/job-hunt-loop-case-study` | **求职投递闭环 case study** —— 上述方法论在一个具体场景的完整落地（防幻觉评估机制 + 4 条工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
 
 ---
 
