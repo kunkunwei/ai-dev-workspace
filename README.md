@@ -19,13 +19,13 @@
 > **Case Study：求职投递闭环** —— 本仓库方法论在一个具体场景的完整落地：
 > 用「文件化事实源 + AI 执行」把求职投递做成一条**可追溯、可复核、不靠记忆**的闭环
 > （JD 评估 → 简历定制 → 表单填写 → 台账看板），含防幻觉评估机制（证据索引 + 红线）、
-> 4 条真实工程踩坑、通用化转换脚本。
+> 6 条真实工程踩坑、通用化转换脚本。
 > → 内容在 `feat/job-hunt-loop-case-study` 分支，见下表「怎么看」。
 
 | 分支 | 内容 | 怎么看 |
 |---|---|---|
 | `main`（默认） | 工作区规范与强制校验工具链 —— 本文件介绍的主体 | 就是当前分支 |
-| `feat/job-hunt-loop-case-study` | **求职投递闭环 case study** —— 上述方法论在一个具体场景的完整落地（防幻觉评估机制 + 4 条工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
+| `feat/job-hunt-loop-case-study` | **求职投递闭环 case study** —— 上述方法论在一个具体场景的完整落地（防幻觉评估机制 + **6 条**工程踩坑 + 通用化转换脚本），最新发布打标 `v1.0.0` | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/`；或直接 `git checkout v1.0.0` |
 
 ---
 
