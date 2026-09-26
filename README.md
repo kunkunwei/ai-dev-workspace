@@ -72,10 +72,34 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
 汇总：0 个 ERROR，0 个 WARN，共 11 项检查结果
 ```
 
-> 生成的索引长这样：`.ai-workspace/INDEX.md`（**禁止手工编辑**）带状态统计与过滤维度，
-> `devices` / `stack` 两个维度让"找相关文档"成为**带条件查询**而不是全量通读。
-> `ws-lint.cjs` 的 `[index] 生成索引与磁盘一致` 是通过**真的再跑一次索引生成并对比**得出的，
-> 不是读缓存 —— 所以"索引过期"这种腐化会被拦住。
+### 索引长什么样（过滤维度）
+
+`.ai-workspace/INDEX.md` 由上面的命令生成（**禁止手工编辑**），带状态统计与过滤维度：
+
+```
+文档总数 5，已标注 5，未标注 0。
+
+## 状态统计
+| status   | 数量 |
+| active   | 3    |
+| resolved | 2    |
+
+## active（3 篇，优先读取）
+| id                         | status | devices        | stack | updated    | title                                    | path |
+| retry-vs-respawn-semantics | active | robot-a robot-b | n/a   | 2026-01-20 | respawn 不是健康检查——进程卡死时永远不会被救 | `known-issues/...` |
+| cold-boot-timeline-test    | active | robot-a robot-b | n/a   | 2026-01-20 | 冷启动时序测试规范——把"上电到可用"拆成可测里程碑 | `procedures/...` |
+| new-session-bootstrap      | active | robot-a        | n/a   | 2026-01-20 | 新会话低成本启动——读什么、按什么顺序读      | `procedures/...` |
+
+## active · 过滤速查
+- 按设备：`robot-a` 3 · `robot-b` 2
+- 按技术栈：`n/a` 3
+```
+
+> **注意最后两行**：索引带 `devices` 与 `stack` 两个维度，所以"找相关文档"是一次**带条件查询**，
+> 而不是把全部文档读一遍。这是第 4 类问题（上下文成本）的解法落点。
+
+**验证要点**：`ws-lint.cjs` 里的 `[index] 生成索引与磁盘一致` 这一项，
+是通过**真的再跑一次索引生成并对比**得出的，不是读缓存。所以"索引过期"这种腐化会被拦住。
 
 ### 5 分钟用到自己的项目（3 步）
 
