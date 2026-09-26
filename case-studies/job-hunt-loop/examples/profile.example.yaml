@@ -46,7 +46,7 @@ skills:
   - title: <技能名>
     text: <一句话能力描述，可含 **强调** 与 `代码` 标记>
     risk: <low|mid|high>
-    evidence: <相对路径>:<行号>        # 例：docs/provision.bash:252-264；无则 UNKNOWN
+    evidence: <相对路径>:<行号>        # 例：docs/build.sh:120-140；无则 UNKNOWN
   - title: <另一条技能>
     text: <描述>
     risk: <low|mid|high>
