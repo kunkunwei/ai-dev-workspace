@@ -117,7 +117,7 @@ cp examples/applications.example.yaml data/applications.yaml
 | `.gitignore` | 隐私红线配置（排除 data/ jd/ tailor/ out/） | 建 `data/` 之前确认它就位 |
 | `docs/01-闭环设计.md` | 四段结构 + 数据流 + 架构取舍 | 想理解「为什么这么设计」、或要改结构时 |
 | `docs/02-防幻觉评估机制.md` | ★ 证据索引 + boundaries 红线（AI 改写边界怎么框死） | **跑 W1 评估之前**（AI 的判据来源） |
-| `docs/03-踩坑记录.md` | ★ 4 条真实工程坑（file:// 丢数据 / Contents API / savedAt / last-write-wins） | **配看板 + 私有仓云同步时**（坑全在那） |
+| `docs/03-踩坑记录.md` | ★ 6 条真实工程坑（`file://` 丢数据 / Contents API 形态 / `savedAt` / last-write-wins / 分页排版页数 / 面板状态枚举） | **配看板 + 私有仓云同步时**，以及**压简历页数时**（坑全在那） |
 | `docs/04-工具选型与许可.md` | 工具调研结论 + 许可注意事项 | **选工具 / 装填表扩展之前** |
 | `procedures/job-application-loop.md` | 给 AI 读的规程（W1/W2/W3） | **每次会话开始**，让 AI 先读它 |
 | `examples/profile.example.yaml` | 结构化简历空骨架（schema + 注释） | 首次建 `data/profile.yaml` 时复制 |
@@ -145,7 +145,9 @@ cp examples/applications.example.yaml data/applications.yaml
 | 分支 | 内容 | 怎么看 |
 |---|---|---|
 | `main`（默认） | 工作区规范与强制校验工具链（本仓主体） | `git checkout main` |
-| `feat/job-hunt-loop-case-study` | 本 case study（防幻觉评估机制 + 4 条工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
+| `feat/job-hunt-loop-case-study` | 本 case study（防幻觉评估机制 + **6 条**工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
+
+> 稳定取用点见本文件末尾的「版本」一节。
 
 ---
 
@@ -167,3 +169,16 @@ cp examples/applications.example.yaml data/applications.yaml
   - [`Echo6v9o/job-tracker`](https://github.com/Echo6v9o/job-tracker) —— **MIT**，可引用/托管，保留 LICENSE 与署名
   - [`1lck/AI-Resume-Form-Filling-Assistant`](https://github.com/1lck/AI-Resume-Form-Filling-Assistant) —— **GPL-3.0**，**不能把代码复制进本仓**（传染 GPL），只给链接
 - 详细许可分析见 `docs/04-工具选型与许可.md`
+
+---
+
+## 版本
+
+| 标签 | 指向 | 内容 |
+|---|---|---|
+| `v1.0.0` | `feat/job-hunt-loop-case-study` | 首次发布：四段结构 + 防幻觉评估机制（证据索引 + 红线）+ **6 条**工程踩坑 + 通用化规程（W1/W2/W3）+ 转换脚本 |
+
+取用某个稳定版本：`git checkout v1.0.0`。
+
+> 标签打在 case study 这条线上。本仓 `main` 是工作区规范主体，**两条线不合并**——
+> 看工作区规范用 `main`，看这个案例用上面的标签或分支。
