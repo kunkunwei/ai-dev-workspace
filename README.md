@@ -14,6 +14,85 @@
 
 ---
 
+## 两条线 / 我在哪
+
+| 分支 | 内容 | 怎么看 |
+|---|---|---|
+| `main`（默认） | 工作区规范与强制校验工具链 —— 本文件介绍的主体 | 就是当前分支 |
+| `feat/job-hunt-loop-case-study` | **求职投递闭环 case study** —— 上述方法论在一个具体场景的完整落地（防幻觉评估机制 + 4 条工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
+
+---
+
+## 快速开始
+
+### 30 秒看效果（两条命令）
+
+本仓库本身就是一个**可运行的活工作区**，`known-issues/`、`procedures/`、`tasks/` 下有示例文档。
+`tools/` 里的脚本可以直接对本仓库运行 —— 不需要任何安装（只用 Node 内置模块）。
+
+```bash
+# 1) 从文档 front-matter 机器生成索引
+node .ai-workspace/tools/ws-index.cjs
+
+# 2) 跑强制校验层
+node .ai-workspace/tools/ws-lint.cjs
+```
+
+实际输出（索引生成）：
+
+```
+CREATED .ai-workspace/INDEX.md (1744 bytes)
+CREATED .ai-workspace/known-issues/README.md (1067 bytes)
+```
+
+实际输出（强制校验）：
+
+```
+工作台校验 · ws-lint
+目录：<repo>/.ai-workspace
+
+  OK  [AGENTS.md] 11961 B（上限 fail 15000，warn 12000）— 每任务固定注入成本
+  OK  [rules] core/ 下全部规则文件都在 AGENTS.md 中被点名（必须显式读取）
+  OK  [agents-md·import] 未使用失效的 `@` 导入语法
+  OK  [current.md] 1260 B（上限 30000）
+  OK  [checkpoint] 24 行 / 307 中文字符（上限 40 行 / 1200）
+  OK  [front-matter] 5/5（100.0%）
+  OK  [index] 生成索引与磁盘一致
+  OK  [placeholder] 无空占位 README
+  OK  [secrets] 无凭据类文件被 git 跟踪
+  OK  [secrets·gitignore] .ai-workspace/secrets/ 已被忽略
+  OK  [stale-runtime] AGENTS.md 与 agents/ 无失效运行时引用
+
+汇总：0 个 ERROR，0 个 WARN，共 11 项检查结果
+```
+
+> 生成的索引长这样：`.ai-workspace/INDEX.md`（**禁止手工编辑**）带状态统计与过滤维度，
+> `devices` / `stack` 两个维度让"找相关文档"成为**带条件查询**而不是全量通读。
+> `ws-lint.cjs` 的 `[index] 生成索引与磁盘一致` 是通过**真的再跑一次索引生成并对比**得出的，
+> 不是读缓存 —— 所以"索引过期"这种腐化会被拦住。
+
+### 5 分钟用到自己的项目（3 步）
+
+这套东西是通用方法论，不绑定任何具体技术栈：
+
+1. 把 `AGENTS.md` 改成你自己项目的规范入口（保留结构，替换内容）
+2. 保留 `.ai-workspace/core/` 的规则骨架，按你的风险等级调整权限分级与禁止项
+3. 拷走 `tools/*.cjs`（只有 Node 内置依赖），从 `ws-lint.cjs` 删掉不需要的检查项，
+   **保留索引新鲜度与凭据卫生这两条**：
+   ```bash
+   node .ai-workspace/tools/ws-fm-backfill.cjs  # 给存量文档补元数据
+   # ws-index / ws-lint 的使用与输出见上面「30 秒看效果」，照抄即可
+   ```
+
+### 想看求职投递闭环
+
+```bash
+git fetch origin && git checkout feat/job-hunt-loop-case-study
+cd case-studies/job-hunt-loop && cat README.md
+```
+
+---
+
 ## 一、它解决的具体问题
 
 | # | 问题 | 典型现象 | 本仓库的方案 |
@@ -40,79 +119,7 @@
 
 ---
 
-## 三、亲手验证：把下面两条命令跑一遍
-
-本仓库本身就是一个**可运行的活工作区**，`known-issues/`、`procedures/`、`tasks/` 下有示例文档。
-`tools/` 里的脚本可以直接对本仓库运行 —— 不需要任何安装（只用 Node 内置模块）。
-
-```bash
-# 1) 从文档 front-matter 机器生成索引
-node .ai-workspace/tools/ws-index.cjs
-
-# 2) 跑强制校验层
-node .ai-workspace/tools/ws-lint.cjs
-```
-
-### 实际输出（索引生成）
-
-```
-CREATED .ai-workspace/INDEX.md (1744 bytes)
-CREATED .ai-workspace/known-issues/README.md (1067 bytes)
-```
-
-### 实际输出（强制校验）
-
-```
-工作台校验 · ws-lint
-目录：<repo>/.ai-workspace
-
-  OK  [AGENTS.md] 11961 B（上限 fail 15000，warn 12000）— 每任务固定注入成本
-  OK  [rules] core/ 下全部规则文件都在 AGENTS.md 中被点名（必须显式读取）
-  OK  [agents-md·import] 未使用失效的 `@` 导入语法
-  OK  [current.md] 1260 B（上限 30000）
-  OK  [checkpoint] 24 行 / 307 中文字符（上限 40 行 / 1200）
-  OK  [front-matter] 5/5（100.0%）
-  OK  [index] 生成索引与磁盘一致
-  OK  [placeholder] 无空占位 README
-  OK  [secrets] 无凭据类文件被 git 跟踪
-  OK  [secrets·gitignore] .ai-workspace/secrets/ 已被忽略
-  OK  [stale-runtime] AGENTS.md 与 agents/ 无失效运行时引用
-
-汇总：0 个 ERROR，0 个 WARN，共 11 项检查结果
-```
-
-### 生成出来的索引长这样
-
-`.ai-workspace/INDEX.md` 由上面的命令生成（**禁止手工编辑**），带状态统计与过滤维度：
-
-```
-文档总数 5，已标注 5，未标注 0。
-
-## 状态统计
-| status   | 数量 |
-| active   | 3    |
-| resolved | 2    |
-
-## active（3 篇，优先读取）
-| id                         | status | devices        | stack | updated    | title                                    | path |
-| retry-vs-respawn-semantics | active | robot-a robot-b | n/a   | 2026-01-20 | respawn 不是健康检查——进程卡死时永远不会被救 | `known-issues/...` |
-| cold-boot-timeline-test    | active | robot-a robot-b | n/a   | 2026-01-20 | 冷启动时序测试规范——把"上电到可用"拆成可测里程碑 | `procedures/...` |
-| new-session-bootstrap      | active | robot-a        | n/a   | 2026-01-20 | 新会话低成本启动——读什么、按什么顺序读      | `procedures/...` |
-
-## active · 过滤速查
-- 按设备：`robot-a` 3 · `robot-b` 2
-- 按技术栈：`n/a` 3
-```
-
-> **注意最后两行**：索引带 `devices` 与 `stack` 两个维度，所以"找相关文档"是一次**带条件查询**，
-> 而不是把全部文档读一遍。这是第 4 类问题（上下文成本）的解法落点。
-
-**验证要点**：`ws-lint.cjs` 里的 `[index] 生成索引与磁盘一致` 这一项，
-是通过**真的再跑一次索引生成并对比**得出的，不是读缓存。所以"索引过期"这种腐化会被拦住。
-
----
-
-## 四、目录结构
+## 三、目录结构
 
 ```
 .
@@ -152,7 +159,7 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
 
 ---
 
-## 五、四个核心设计
+## 四、四个核心设计
 
 ### 1. 文件化事实源，而不是依赖模型记忆
 
@@ -196,7 +203,7 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
 
 ---
 
-## 六、强制校验层做了什么
+## 五、强制校验层做了什么
 
 `tools/ws-lint.cjs` 是这套规范的执行者。它把"规矩"变成"能不能提交"，覆盖 9 类检查：
 
@@ -221,38 +228,7 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
 
 ---
 
-## 七、怎么用到自己的项目
-
-这套东西是通用方法论，不绑定任何具体技术栈。迁移方式：
-
-1. 把 `AGENTS.md` 改成你自己项目的规范入口（保留结构，替换内容）
-2. 保留 `.ai-workspace/core/` 的规则骨架，按你的风险等级调整权限分级与禁止项
-3. `tools/*.cjs` 可直接拷走用（只有 Node 内置依赖）：
-   ```bash
-   node .ai-workspace/tools/ws-fm-backfill.cjs  # 给存量文档补元数据
-   node .ai-workspace/tools/ws-index.cjs        # 生成索引
-   node .ai-workspace/tools/ws-lint.cjs         # 强制校验
-   ```
-4. 从 `ws-lint.cjs` 里删掉你不需要的检查项，**保留索引新鲜度与凭据卫生这两条**
-
----
-
-## 内容导航 / 分支说明
-
-> **Case Study：求职投递闭环** —— 本仓库方法论在一个具体场景的完整落地：
-> 用「文件化事实源 + AI 执行」把求职投递做成一条**可追溯、可复核、不靠记忆**的闭环
-> （JD 评估 → 简历定制 → 表单填写 → 台账看板），含防幻觉评估机制（证据索引 + 红线）、
-> 4 条真实工程踩坑、通用化转换脚本。
-> → [进入 case study](case-studies/job-hunt-loop/README.md)
-
-| 分支 | 内容 | 怎么看 |
-|---|---|---|
-| `main`（默认） | 工作区规范与强制校验工具链 —— 本文件介绍的主体 | 就是当前分支 |
-| `feat/job-hunt-loop-case-study` | **求职投递闭环 case study** —— 上述方法论在一个具体场景的完整落地（防幻觉评估机制 + 4 条工程踩坑 + 通用化转换脚本） | `git fetch origin && git checkout feat/job-hunt-loop-case-study`，然后看 `case-studies/job-hunt-loop/` |
-
----
-
-## 八、使用边界（写在前面）
+## 六、使用边界（写在前面）
 
 - 本仓库是**方法论与工具层的参考实现**，已做脱敏处理。原项目中的公司标识、产品代号、
   设备信息与本地路径全部替换为占位符；`known-issues/` 与 `procedures/` 下的文档是
@@ -264,7 +240,7 @@ CREATED .ai-workspace/known-issues/README.md (1067 bytes)
 
 ---
 
-## 九、一句话总结
+## 七、一句话总结
 
 > AI 辅助研发的瓶颈往往不在模型能力，而在**工程纪律**：
 > 事实落在哪、谁来验收、边界划在哪、成本怎么控。

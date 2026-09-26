@@ -16,28 +16,6 @@
 
 ---
 
-## 前置条件
-
-**必装**（没有就跑不起来）：
-
-| 需要 | 为什么 | 怎么确认 |
-|---|---|---|
-| 一个 AI 编码 agent 环境 | 本案例的评估/定制/更新都交给 AI 执行，`procedures/` 那份规程就是给它读的 | 你能在命令行里启动 AI agent 即可 |
-| Git | 每个岗位的改动要可追溯（`tailor/` 记录 + 提交历史） | `git --version` |
-
-**可选**（用到才装，不装不影响闭环主体）：
-
-| 需要 | 什么时候才需要 | 怎么装 |
-|---|---|---|
-| 在线表单填表扩展（[`1lck/AI-Resume-Form-Filling-Assistant`](https://github.com/1lck/AI-Resume-Form-Filling-Assistant)，GPL-3.0） | 想一键填公司官网的在线简历时 | 浏览器扩展页加载源码目录；**只给链接，本仓不 vendor 它的代码**（GPL 传染） |
-| 可视化看板（如 [`Echo6v9o/job-tracker`](https://github.com/Echo6v9o/job-tracker)，MIT） | 想要拖拽式看板 + 私有仓云同步时 | 单独下载该 HTML；**保留它的 LICENSE 与署名** |
-| Python 3 + PyYAML | 用 `tools/to_formfill.py` 生成确定性表单 JSON 时（不装的话，填表走扩展自带的「粘贴文本 → AI 导入」） | `pip install pyyaml` |
-| Markdown → PDF 排版工具 | 简历要出定页数 PDF 时（本目录不含排版器，用你自己的） | 任意 |
-
-> 不用装数据库、不用搭 Web 服务。整个闭环就是「文件 + Git + AI agent」。
-
----
-
 ## 快速开始（照做即可）
 
 以下命令都在本目录（`case-studies/job-hunt-loop/`）下执行。路径都是相对路径，直接复制即可。
@@ -105,6 +83,28 @@ cp examples/applications.example.yaml data/applications.yaml
 - 记进度：收到笔试/面试/拒信时，把邮件正文粘给 AI 触发 W3，更新 `applications.yaml`
 
 > 每次改动记得 `git add && git commit` —— 「可追溯」是本闭环的承重墙。
+
+---
+
+## 前置条件
+
+**必装**（没有就跑不起来）：
+
+| 需要 | 为什么 | 怎么确认 |
+|---|---|---|
+| 一个 AI 编码 agent 环境 | 本案例的评估/定制/更新都交给 AI 执行，`procedures/` 那份规程就是给它读的 | 你能在命令行里启动 AI agent 即可 |
+| Git | 每个岗位的改动要可追溯（`tailor/` 记录 + 提交历史） | `git --version` |
+
+**可选**（用到才装，不装不影响闭环主体）：
+
+| 需要 | 什么时候才需要 | 怎么装 |
+|---|---|---|
+| 在线表单填表扩展（[`1lck/AI-Resume-Form-Filling-Assistant`](https://github.com/1lck/AI-Resume-Form-Filling-Assistant)，GPL-3.0） | 想一键填公司官网的在线简历时 | 浏览器扩展页加载源码目录；**只给链接，本仓不 vendor 它的代码**（GPL 传染） |
+| 可视化看板（如 [`Echo6v9o/job-tracker`](https://github.com/Echo6v9o/job-tracker)，MIT） | 想要拖拽式看板 + 私有仓云同步时 | 单独下载该 HTML；**保留它的 LICENSE 与署名** |
+| Python 3 + PyYAML | 用 `tools/to_formfill.py` 生成确定性表单 JSON 时（不装的话，填表走扩展自带的「粘贴文本 → AI 导入」） | `pip install pyyaml` |
+| Markdown → PDF 排版工具 | 简历要出定页数 PDF 时（本目录不含排版器，用你自己的） | 任意 |
+
+> 不用装数据库、不用搭 Web 服务。整个闭环就是「文件 + Git + AI agent」。
 
 ---
 
